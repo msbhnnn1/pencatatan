@@ -1,176 +1,65 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FinTrack — Catat Keuangan, Tabungan & Budget</title>
+  <title>Dashboard Pengeluaran</title>
 
   <!-- Google Fonts & Chart.js -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
   <div class="container">
-    <!-- Header -->
-    <header class="app-header">
-      <div class="header-info">
-        <h1>💰 FinTrack <span class="badge-app">Pintar</span></h1>
-        <p class="subtitle">Pencatat Pemasukan, Pengeluaran, Tabungan & Budget Bulanan</p>
-      </div>
-      <div class="header-actions">
-        <button id="openCategoryBtn" class="btn btn-secondary">
-          <span>🏷️</span> Kelola Kategori
-        </button>
-        <button id="openBudgetBtn" class="btn btn-secondary">
-          <span>🎯</span> Atur Budget
-        </button>
-        <button id="openTxBtn" class="btn btn-primary">
-          <span>➕</span> Tambah Transaksi
-        </button>
-        <button id="refreshBtn" class="btn btn-icon" title="Refresh Data">
-          🔄
-        </button>
-      </div>
+    <header>
+      <h1>💰 Pencatat Pengeluaran</h1>
+      <p class="subtitle">Terhubung langsung dengan Telegram Bot</p>
     </header>
 
-    <!-- 4 Stat Cards Grid -->
+    <!-- Stat Cards -->
     <section class="stats-grid">
-      <!-- 1. Pemasukan -->
-      <div class="card stat-card stat-income">
-        <div class="stat-icon">💵</div>
-        <div class="stat-details">
-          <span class="stat-title">Total Pemasukan</span>
-          <h2 id="totalIncome">Rp 0</h2>
-          <span class="stat-sub" id="incomeCount">0 transaksi</span>
-        </div>
+      <div class="card stat-card">
+        <span class="stat-title">Total Pengeluaran Bulan Ini</span>
+        <h2 id="totalAmount">Rp 0</h2>
       </div>
-
-      <!-- 2. Pengeluaran -->
-      <div class="card stat-card stat-expense">
-        <div class="stat-icon">💸</div>
-        <div class="stat-details">
-          <span class="stat-title">Total Pengeluaran</span>
-          <h2 id="totalExpense">Rp 0</h2>
-          <span class="stat-sub" id="expenseCount">0 transaksi</span>
-        </div>
-      </div>
-
-      <!-- 3. Tabungan -->
-      <div class="card stat-card stat-saving">
-        <div class="stat-icon">🏦</div>
-        <div class="stat-details">
-          <span class="stat-title">Total Tabungan</span>
-          <h2 id="totalSaving">Rp 0</h2>
-          <span class="stat-sub" id="savingCount">0 alokasi</span>
-        </div>
-      </div>
-
-      <!-- 4. Saldo Bersih -->
-      <div class="card stat-card stat-balance">
-        <div class="stat-icon">⚖️</div>
-        <div class="stat-details">
-          <span class="stat-title">Sisa Saldo Bersih</span>
-          <h2 id="netBalance">Rp 0</h2>
-          <span class="stat-sub" id="balanceStatus">Arus kas stabil</span>
-        </div>
+      <div class="card stat-card">
+        <span class="stat-title">Jumlah Transaksi</span>
+        <h2 id="totalCount">0</h2>
       </div>
     </section>
 
-    <!-- Budget Tracker Banner Card -->
-    <section class="card budget-card">
-      <div class="budget-header">
-        <div class="budget-info">
-          <div class="budget-title-row">
-            <h3>🎯 Kontrol Budget Pengeluaran Bulanan</h3>
-            <span id="budgetStatusBadge" class="badge badge-success">Aman</span>
-          </div>
-          <p class="budget-desc">Pantau pengeluaran agar tidak melebihi batas anggaran yang Anda tetapkan.</p>
-        </div>
-        <div class="budget-numbers">
-          <div class="b-stat">
-            <span class="b-label">Target Budget:</span>
-            <span class="b-val" id="targetBudgetVal">Rp 0</span>
-          </div>
-          <div class="b-stat">
-            <span class="b-label">Terpakai:</span>
-            <span class="b-val expense-color" id="usedBudgetVal">Rp 0</span>
-          </div>
-          <div class="b-stat">
-            <span class="b-label">Sisa Budget:</span>
-            <span class="b-val" id="remainBudgetVal">Rp 0</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Progress bar -->
-      <div class="budget-progress-container">
-        <div class="budget-progress-bar" id="budgetProgressBar" style="width: 0%"></div>
-      </div>
-      <div class="budget-progress-labels">
-        <span id="budgetPercentText">0% terpakai</span>
-        <button id="quickEditBudgetBtn" class="link-btn">Ubah Target Budget ✏️</button>
-      </div>
-    </section>
-
-    <!-- Content Grid (Charts & Table) -->
+    <!-- Visual Chart & Table Grid -->
     <section class="content-grid">
-      <!-- Left Column: Visual Charts -->
-      <div class="charts-column">
-        <!-- Chart 1: Cash Flow Comparison -->
-        <div class="card chart-card">
-          <div class="card-head">
-            <h3>📊 Arus Kas (Pemasukan, Keluar & Tabungan)</h3>
-          </div>
-          <div class="chart-container">
-            <canvas id="cashflowChart"></canvas>
-          </div>
-        </div>
-
-        <!-- Chart 2: Category Breakdown -->
-        <div class="card chart-card">
-          <div class="card-head">
-            <h3>🍩 Proporsi Pengeluaran per Kategori</h3>
-          </div>
-          <div class="chart-container">
-            <canvas id="categoryChart"></canvas>
-          </div>
+      <!-- Chart Card -->
+      <div class="card chart-card">
+        <h3>Pengeluaran per Kategori</h3>
+        <div class="chart-container">
+          <canvas id="categoryChart"></canvas>
         </div>
       </div>
 
-      <!-- Right Column: Transactions Table -->
+      <!-- Transactions List Card -->
       <div class="card table-card">
-        <div class="table-header-section">
-          <div>
-            <h3>Riwayat Transaksi</h3>
-            <p class="table-sub">Data dari web dan bot Telegram secara langsung</p>
-          </div>
-          <!-- Filter Tabs -->
-          <div class="filter-tabs">
-            <button class="filter-tab active" data-filter="all">Semua</button>
-            <button class="filter-tab" data-filter="pemasukan">Pemasukan</button>
-            <button class="filter-tab" data-filter="pengeluaran">Pengeluaran</button>
-            <button class="filter-tab" data-filter="tabungan">Tabungan</button>
-          </div>
+        <div class="table-header">
+          <h3>Riwayat Transaksi</h3>
+          <button id="refreshBtn">🔄 Refresh Data</button>
         </div>
-
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
                 <th>Tanggal</th>
-                <th>Tipe</th>
                 <th>Kategori</th>
                 <th>Keterangan</th>
                 <th>Nominal</th>
-                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="transactionBody">
-              <!-- Diisi oleh JS -->
+              <!-- Data akan diisi via JavaScript -->
             </tbody>
           </table>
         </div>
@@ -178,126 +67,7 @@
     </section>
   </div>
 
-  <!-- MODAL 1: Tambah Transaksi -->
-  <div class="modal-overlay" id="txModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>➕ Tambah Transaksi Baru</h3>
-        <button class="close-btn" id="closeTxModal">&times;</button>
-      </div>
-      <form id="txForm">
-        <!-- Tipe Transaksi: Segmented Selector -->
-        <div class="form-group">
-          <label>Tipe Transaksi</label>
-          <div class="type-selector">
-            <label class="type-option type-expense">
-              <input type="radio" name="txType" value="pengeluaran" checked>
-              <span>💸 Pengeluaran</span>
-            </label>
-            <label class="type-option type-income">
-              <input type="radio" name="txType" value="pemasukan">
-              <span>💵 Pemasukan</span>
-            </label>
-            <label class="type-option type-saving">
-              <input type="radio" name="txType" value="tabungan">
-              <span>🏦 Tabungan</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Nominal -->
-        <div class="form-group">
-          <label for="txAmount">Nominal (Rp)</label>
-          <input type="number" id="txAmount" placeholder="Contoh: 50000" min="1" required>
-        </div>
-
-        <!-- Kategori -->
-        <div class="form-group">
-          <div class="label-row">
-            <label for="txCategory">Kategori</label>
-            <button type="button" id="quickManageCatBtn" class="link-btn">+ Kelola Kategori</button>
-          </div>
-          <select id="txCategory" required>
-            <!-- Diisi otomatis oleh JS sesuai tipe yang dipilih -->
-          </select>
-        </div>
-
-        <!-- Keterangan -->
-        <div class="form-group">
-          <label for="txDesc">Keterangan / Catatan</label>
-          <input type="text" id="txDesc" placeholder="Contoh: Makan siang bersama rekan" required>
-        </div>
-
-        <!-- Tanggal -->
-        <div class="form-group">
-          <label for="txDate">Tanggal</label>
-          <input type="date" id="txDate" required>
-        </div>
-
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="cancelTxBtn">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL 2: Atur Target Budget -->
-  <div class="modal-overlay" id="budgetModal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>🎯 Atur Target Budget Bulanan</h3>
-        <button class="close-btn" id="closeBudgetModal">&times;</button>
-      </div>
-      <form id="budgetForm">
-        <p class="modal-desc">Tentukan batas maksimal pengeluaran bulanan yang ingin Anda jaga.</p>
-        <div class="form-group">
-          <label for="budgetInput">Batas Anggaran (Rp)</label>
-          <input type="number" id="budgetInput" placeholder="Contoh: 3500000" min="0" required>
-        </div>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="cancelBudgetBtn">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Target Budget</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL 3: Kelola Kategori (Tambah & Hapus) -->
-  <div class="modal-overlay" id="categoryModal">
-    <div class="modal-card modal-large">
-      <div class="modal-header">
-        <h3>🏷️ Kelola Kategori</h3>
-        <button class="close-btn" id="closeCategoryModal">&times;</button>
-      </div>
-      
-      <!-- Tab Pilihan Tipe Kategori -->
-      <div class="cat-type-tabs">
-        <button class="cat-tab active" data-cat-type="pengeluaran">💸 Pengeluaran</button>
-        <button class="cat-tab" data-cat-type="pemasukan">💵 Pemasukan</button>
-        <button class="cat-tab" data-cat-type="tabungan">🏦 Tabungan</button>
-      </div>
-
-      <!-- Form Tambah Kategori -->
-      <form id="addCategoryForm" class="add-cat-form">
-        <input type="text" id="newCategoryInput" placeholder="Ketik nama kategori baru (contoh: Kopi & Kafe)..." required>
-        <button type="submit" class="btn btn-primary"><span>➕</span> Tambah</button>
-      </form>
-
-      <!-- Daftar Kategori yang Sedang Aktif -->
-      <div class="cat-list-section">
-        <h4>Daftar Kategori Saat Ini:</h4>
-        <div id="categoryTagsContainer" class="cat-tags-container">
-          <!-- Diisi otomatis oleh JS -->
-        </div>
-      </div>
-
-      <div class="modal-actions">
-        <button type="button" class="btn btn-secondary" id="doneCategoryBtn">Selesai</button>
-      </div>
-    </div>
-  </div>
-
   <script src="script.js"></script>
 </body>
+
 </html>
